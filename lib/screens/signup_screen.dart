@@ -158,6 +158,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 onPressed: _signUp,
                 child: const Text('Sign Up'),
               ),
+              const SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+                  context.go('/login'); // Navigate to login screen
+                },
+                child: const Text('Already have an account? Login here'),
+              ),
             ],
           ),
         ),

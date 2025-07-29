@@ -13,10 +13,14 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  String _errorMessage = ''; // State variable for error message
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
       try {
+        setState(() {
+          _errorMessage = ''; // Clear previous errors
+        });
         await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
@@ -25,19 +29,21 @@ class _LoginScreenState extends State<LoginScreen> {
         // Navigate to home screen on successful login
         context.go('/home');
       } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          // Handle user not found
-          print('No user found for that email.');
-        } else if (e.code == 'wrong-password') {
-          // Handle wrong password
-          print('Wrong password provided for that user.');
-        } else {
-          // Handle other Firebase Auth exceptions
-          print('Firebase Auth Error: ${e.message}');
-        }
+        setState(() {
+          if (e.code == 'user-not-found') {
+            _errorMessage = 'No user found for that email.';
+          } else if (e.code == 'wrong-password') {
+            _errorMessage = 'Wrong password provided for that user.';
+          } else {
+            _errorMessage = 'Login failed: ${e.message}';
+          }
+        });
+        print('Firebase Auth Error: ${e.message}'); // Keep console logging
       } catch (e) {
-        // Handle other errors
-        print('Error: $e');
+        setState(() {
+          _errorMessage = 'An unexpected error occurred: $e';
+        });
+        print('Error: $e'); // Keep console logging
       }
     }
   }
@@ -97,6 +103,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: _login,
                 child: const Text('Login'),
               ),
+              const SizedBox(height: 20),
+              // Display error message
+              if (_errorMessage.isNotEmpty)
+                Text(
+                  _errorMessage,
+                  style: const TextStyle(color: Colors.red),
+                ),
               const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
