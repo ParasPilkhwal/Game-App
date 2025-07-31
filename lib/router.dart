@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart'; // Import for ValueListenable
 // Import your screen widgets
 import 'screens/login_screen.dart';
 import 'screens/signup_screen.dart';
-import 'package:myapp/main.dart'; // Import MyHomePage
+import 'package:myapp/main.dart'; // Import GameHomePage
 
 final GoRouter goRouter = GoRouter(
   initialLocation: '/login',
@@ -27,7 +27,7 @@ final GoRouter goRouter = GoRouter(
     GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState state) {
-        return const MyHomePage(); // Use MyHomePage as the home route
+        return const GameHomePage(); // Use GameHomePage as the home route
       },
     ),
   ],
@@ -39,7 +39,7 @@ final GoRouter goRouter = GoRouter(
 
     // If the user is logged in, but is on the login or signup page, redirect to home.
     if (loggedIn && (loggingIn || signingUp)) {
-      return '/'; // Redirect to the root route (MyHomePage)
+      return '/'; // Redirect to the root route (GameHomePage)
     }
     // If the user is not logged in, and is not on the login or signup page, redirect to login.
     if (!loggedIn && !(loggingIn || signingUp)) {
